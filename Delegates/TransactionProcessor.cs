@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Delegates
 {
-    public abstract class TransactionProcessor
+    public abstract class TransactionProcessor<Request,Action>
     {
-        Func<TransactionRequest, bool> Check;
-        Func<TransactionRequest, Transaction> Register;
-        Action<Transaction> Save;
-        public Transaction Process(TransactionRequest request)
+        Func<Request, bool> Check;
+        Func<Request, Action> Register;
+        Action<Action> Save;
+        public Action Process(Request request)
         {
             if (!Check(request))
                 throw new ArgumentException();
