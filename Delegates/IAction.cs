@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Delegates
 {
-    public class Transaction:IAction
+    public class IAction
     {
     }
 }

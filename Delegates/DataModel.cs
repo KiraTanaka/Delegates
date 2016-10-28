@@ -1,33 +1,67 @@
-﻿using System;
+﻿using Delegates.DataModelEventArgs;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Delegates
-{
-    public delegate void EventHandler();
+{   
     public class DataModel
     {
-        public event EventHandler OnPut;
-        public event EventHandler OnInsertRow;
-        public event EventHandler OnInsertColumn;
+        private List<List<int>> table = new List<List<int>>();
 
+        public delegate void PutEventHandler(object sender,DataModelPutEventArgs e);
+        public delegate void InsertRowEventHandler(object sender, DataModelInsertRowEventArgs e);
+        public delegate void InsertColumnEventHandler(object sender, DataModelInsertColumnEventArgs e);
+
+        public event PutEventHandler OnPut;
+        public event InsertRowEventHandler OnInsertRow;
+        public event InsertColumnEventHandler OnInsertColumn;
+        
         public void Put(int row, int column, int value)
         {
-            OnPut?.Invoke();
+            //помещает значение в соответствующую ячейку
+            table[row][column] = value;
+            OnPut?.Invoke(this, new DataModelPutEventArgs(value, row, column));
         }
         public void InsertRow(int rowIndex)
         {
-            OnInsertRow?.Invoke();
+            if (rowIndex <= table.Count)
+            {
+                if (rowIndex < table.Count)
+                    table.Insert(rowIndex, new List<int>());
+                else
+                    table.Add(new List<int>());
+                OnInsertRow?.Invoke(this, new DataModelInsertRowEventArgs(rowIndex));
+            }
+            else
+                throw new ArgumentException();
+            
         }
         public void InsertColumn(int columnIndex)
         {
-            OnInsertColumn?.Invoke();
+            if (columnIndex <= table.First().Count)
+            {
+                foreach (var row in table)
+                {
+                    if (columnIndex < row.Count)
+                        row.Insert(columnIndex, 0);
+                    else
+                        row.Add(0);                           
+                }
+                OnInsertColumn?.Invoke(this, new DataModelInsertColumnEventArgs(columnIndex));
+            }
+            else
+                throw new ArgumentException();
         }
         public int Get(int row, int column)
         {
-            return 0;
+            if (row < table.Count && column < table.First().Count)
+                return table[row][column];
+            else
+                throw new ArgumentException();
         }
         
     }
