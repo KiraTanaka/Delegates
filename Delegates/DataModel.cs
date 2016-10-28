@@ -23,8 +23,13 @@ namespace Delegates
         public void Put(int row, int column, int value)
         {
             //помещает значение в соответствующую ячейку
-            table[row][column] = value;
-            OnPut?.Invoke(this, new DataModelPutEventArgs(value, row, column));
+            if (row < table.Count && column < table.First().Count)
+            {
+                table[row][column] = value;
+                OnPut?.Invoke(this, new DataModelPutEventArgs(value, row, column));
+            }
+            else
+                throw new ArgumentException();
         }
         public void InsertRow(int rowIndex)
         {
