@@ -47,8 +47,6 @@
     <Compile Include="DataModelEventArgs\DataModelInsertColumnEventArgs.cs" />
     <Compile Include="DataModelEventArgs\DataModelInsertRowEventArgs.cs" />
     <Compile Include="DataModelEventArgs\DataModelPutEventArgs.cs" />
-    <Compile Include="IAction.cs" />
-    <Compile Include="IRequest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transaction.cs" />

@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace Delegates
 {
-    public class TransactionProcessor
+    public class TransactionProcessor<TProcess, TRequest> where TProcess : class
+                                                            where TRequest : class
     {
-        public Func<IRequest, bool> Check;
-        public Func<IRequest, IAction> Register;
-        public Action<IAction> Save;
-        public IAction Process(IRequest request)
+        Func<TRequest, bool> Check;
+        Func<TRequest, TProcess> Register;
+        Action<TProcess> Save;
+        public TransactionProcessor() { }
+        public TransactionProcessor(Func<TRequest, bool> check, Func<TRequest, TProcess> register, Action<TProcess> save)
+        {
+            Check = check;
+            Register = register;
+            Save = save;
+        }
+        public TProcess Process(TRequest request)
         {
             if (!(bool)Check?.Invoke(request))
                 throw new ArgumentException();
